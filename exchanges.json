@@ -128,7 +128,14 @@
         "app": "com.coinbase.android",
         "web": "https://www.coinbase.com/",
         "api": {
-          
+          "buy": {
+            "endpoint": "https://api.coinbase.com/v2/prices/buy?currency=USD",
+            "buyKey": "data.amount"
+          },
+          "sell": {
+            "endpoint": "https://api.coinbase.com/v2/prices/sell?currency=USD",
+            "sellKey": "data.amount"
+          }
         }
       },
       {
@@ -139,7 +146,12 @@
         "app": "io.cex.app.prod",
         "web": "https://cex.io/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://cex.io/api/ticker/BTC/USD",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       },
       {
@@ -150,7 +162,12 @@
         "app": "com.okcoin.trader.google",
         "web": "https://www.okcoin.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd",
+            "buyKey": "ticker.buy",
+            "sellKey": "ticker.sell",
+            "volumeKey": "ticker.vol"
+          }
         }
       },
       {
@@ -161,7 +178,12 @@
         "app": "com.bitfinex.bfxapp",
         "web": "https://www.bitfinex.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://api.bitfinex.com/v1/pubticker/btcusd",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       },
       {
@@ -172,7 +194,12 @@
         "app": "net.bitstamp.bitstamp",
         "web": "https://www.bitstamp.net/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://www.bitstamp.net/api/ticker/",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       },
       {
@@ -192,7 +219,7 @@
         }
       },
       {
-        "id": 3,
+        "id": 7,
         "name": "coinhako",
         "buy_fee": "0.9", 
         "sell_fee": "0.9",
