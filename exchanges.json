@@ -195,7 +195,7 @@
         "web": "https://www.bitstamp.net/",
         "api": {
           "all": {
-            "endpoint": "https://www.bitstamp.net/api/ticker/",
+            "endpoint": "https://www.bitstamp.net/api/v2/ticker/BTCUSD/",
             "buyKey": "ask",
             "sellKey": "bid",
             "volumeKey": "volume"
@@ -243,7 +243,12 @@
         "app": "",
         "web": "https://hitbtc.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "http://api.hitbtc.com/api/1/public/BTCEUR/ticker",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       },
       {
@@ -254,7 +259,12 @@
         "app": "io.cex.app.prod",
         "web": "https://cex.io/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://cex.io/api/ticker/BTC/EUR",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       },
       {
@@ -265,7 +275,12 @@
         "app": "",
         "web": "https://www.kraken.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://api.kraken.com/0/public/Ticker?pair=XBTEUR",
+            "buyKey": "result.XXBTZEUR.a",
+            "sellKey": "result.XXBTZEUR.b",
+            "volumeKey": "result.XXBTZEUR.v"
+          }
         }
       },
       {
@@ -276,7 +291,12 @@
         "app": "",
         "web": "https://www.lakebtc.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://api.LakeBTC.com/api_v2/ticker",
+            "buyKey": "btceur.ask",
+            "sellKey": "btceur.bid",
+            "volumeKey": "btceur.volume"
+          }
         }
       },
       {
@@ -287,7 +307,12 @@
         "app": "net.bitstamp.bitstamp",
         "web": "https://www.bitstamp.net/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://www.bitstamp.net/api/v2/ticker/BTCEUR/",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       },
       {
@@ -298,7 +323,12 @@
         "app": "",
         "web": "https://www.gdax.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://api.gdax.com/products/BTC-EUR/ticker",
+            "buyKey": "ask",
+            "sellKey": "bid",
+            "volumeKey": "volume"
+          }
         }
       }
     ],
@@ -311,7 +341,12 @@
         "app": "com.okcoin.trader.google",
         "web": "https://www.okcoin.com/",
         "api": {
-          
+          "all": {
+            "endpoint": "https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_cny",
+            "buyKey": "ticker.buy",
+            "sellKey": "ticker.sell",
+            "volumeKey": "ticker.vol"
+          }
         }
       },
       {
@@ -322,18 +357,12 @@
         "app": "com.btcchina.spot",
         "web": "https://www.btcchina.com/",
         "api": {
-          
-        }
-      },
-      {
-        "id": 3,
-        "name": "gatecoin",
-        "buy_fee": "0", 
-        "sell_fee": "0",
-        "app": "",
-        "web": "https://gatecoin.com/",
-        "api": {
-          
+          "all": {
+            "endpoint": "https://data.btcchina.com/data/ticker?market=btccny",
+            "buyKey": "ticker.buy",
+            "sellKey": "ticker.sell",
+            "volumeKey": "ticker.vol"
+          }
         }
       }
     ]
