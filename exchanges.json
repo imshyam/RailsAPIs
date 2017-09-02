@@ -96,7 +96,7 @@
             "endpoint": "https://api.coinsecure.in/v1/exchange/ticker",
             "buyKey": "message.ask",
             "sellKey": "message.bid",
-            "volumeKey": ""
+            "volumeKey": "message.coinvolume"
           }
         }
       },
@@ -277,9 +277,9 @@
         "api": {
           "all": {
             "endpoint": "https://api.kraken.com/0/public/Ticker?pair=XBTEUR",
-            "buyKey": "result.XXBTZEUR.a",
-            "sellKey": "result.XXBTZEUR.b",
-            "volumeKey": "result.XXBTZEUR.v"
+            "buyKey": "result.XXBTZEUR.a.0",
+            "sellKey": "result.XXBTZEUR.b.0",
+            "volumeKey": "result.XXBTZEUR.v.1"
           }
         }
       },
