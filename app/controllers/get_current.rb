@@ -1,6 +1,12 @@
 require 'json'
 require 'open-uri'
 
+class String
+    def is_i?
+    	/\A[-+]?\d+\z/ === self
+    end
+end
+
 class GetData
 	@jsonData
 	def getResponse(api)
@@ -27,17 +33,20 @@ class GetData
 				currentData["success"] = true
 				tmp = response
 				for key in buy
+					key = key.is_i? ? key.to_i : key
 					tmp = tmp[key]
 				end
 				currentData["buy"] = tmp
 				tmp = response
 				for key in sell
+					key = key.is_i? ? key.to_i : key
 					tmp = tmp[key]
 				end
 				currentData["sell"] = tmp
 				if volume != -1
 					tmp = response
-					for key in sell
+					for key in volume
+						key = key.is_i? ? key.to_i : key
 						tmp = tmp[key]
 					end
 				else
