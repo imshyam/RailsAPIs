@@ -4,8 +4,8 @@ require 'open-uri'
 class GetData
 	@jsonData
 	def getResponse(api)
+		currentData = Hash['success'=> false, 'buy'=> -1, 'sell'=> -1, 'volume'=> -1]
 		if api.length == 1
-			puts api
 			url = api['all']['endpoint']
 			buy = api['all']['buyKey'].split('.')
 			sell = api['all']['sellKey'].split('.')
@@ -18,9 +18,33 @@ class GetData
 			begin
 				response = JSON.parse(open(url, read_timeout: 1, open_timeout: 1).read)
 			rescue Exception => e
-				CurrentData::success = false
+				currentData["success"] = false
+				currentData["buy"] = -1
+				currentData["sell"] = -1
+				currentData["volume"] = -1
+				puts currentData
 			else
-				puts response
+				currentData["success"] = true
+				tmp = response
+				for key in buy
+					tmp = tmp[key]
+				end
+				currentData["buy"] = tmp
+				tmp = response
+				for key in sell
+					tmp = tmp[key]
+				end
+				currentData["sell"] = tmp
+				if volume != -1
+					tmp = response
+					for key in sell
+						tmp = tmp[key]
+					end
+				else
+					tmp = -1
+				end
+				currentData["volume"] = tmp
+				puts currentData
 			end
 		end
 	end
@@ -35,6 +59,7 @@ class GetData
 		for keyCC in @jsonData.keys
 			for keyPC in @jsonData[keyCC].keys
 				for exchange in @jsonData[keyCC][keyPC]
+					puts "#{keyCC} #{keyPC} #{exchange['name']}"
 					result = getResponse(exchange['api'])
 				end
 			end
