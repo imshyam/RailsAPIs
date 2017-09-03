@@ -77,7 +77,7 @@
         "web": "https://www.unocoin.com/",
         "api": {
           "all": {
-            "endpoint": "https://www.unocoin.com/trade.php?all",
+            "endpoint": "https://www.unocoin.com/trade?all",
             "buyKey": "buy",
             "sellKey": "sell",
             "volumeKey": ""
