@@ -10,9 +10,6 @@ end
 class GetData
 	@jsonData
 	def getResponse(api)
-		puts "Api"
-		puts api
-		puts "*****************************"
 		currentData = Hash['success'=> false, 'buy'=> -1, 'sell'=> -1, 'volume'=> -1]
 		# Buy, Sell and Volume are at same endpoint
 		if api.length == 1
@@ -28,16 +25,12 @@ class GetData
 			end
 			# Get Buy, Sell Price and Volume
 			begin
-				response = JSON.parse(open(url, read_timeout: 1, open_timeout: 5).read)
-				puts "Single"
-				puts response
-				puts '=============================='
+				response = JSON.parse(open(url).read)
 			rescue Exception => e
 				currentData["success"] = false
 				currentData["buy"] = -1
 				currentData["sell"] = -1
 				currentData["volume"] = -1
-				puts currentData
 			else
 				currentData["success"] = true
 				tmp = response
@@ -62,8 +55,6 @@ class GetData
 					tmp = -1
 				end
 				currentData["volume"] = tmp
-				puts currentData
-				puts '=============================='
 			end
 		# Buy, Sell and Volume are at different endpoint
 		else
@@ -79,10 +70,7 @@ class GetData
 			end
 			# Get Buy Price
 			begin
-				response = JSON.parse(open(buyEndpoint, read_timeout: 1, open_timeout: 5).read)
-				puts "Multi Buy"
-				puts response
-				puts '=============================='
+				response = JSON.parse(open(buyEndpoint).read)
 			rescue Exception => e
 				currentData["success"] = false
 				currentData["buy"] = -1
@@ -99,10 +87,7 @@ class GetData
 			end
 			# Get Sell Price
 			begin
-				response = JSON.parse(open(sellEndpoint, read_timeout: 1, open_timeout: 5).read)
-				puts "Multi Sell"
-				puts response
-				puts '=============================='
+				response = JSON.parse(open(sellEndpoint).read)
 			rescue Exception => e
 				currentData["success"] = false
 				currentData["buy"] = -1
@@ -121,10 +106,7 @@ class GetData
 			# Get Volume if provided
 			if volumeKey != -1
 				begin
-					response = JSON.parse(open(volumeEndpoint, read_timeout: 1, open_timeout: 5).read)
-					puts "Multi Volume"
-					puts response
-					puts '=============================='
+					response = JSON.parse(open(volumeEndpoint).read)
 				rescue Exception => e
 					currentData["volume"] = -1
 				else
@@ -136,9 +118,8 @@ class GetData
 					currentData["volume"] = tmp
 				end
 			end
-			puts currentData
-			puts '=============================='
 		end
+		puts currentData
 	end
 	def getFileContents(file)
 		text = File.read(file)
