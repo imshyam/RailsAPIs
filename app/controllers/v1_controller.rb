@@ -6,4 +6,7 @@ class V1Controller < ApplicationController
   	@name = "Shyam"
   	@hello = "Hello #{params[:id]} bro"
   end
+  def create
+  	render plain: params[:v1].inspect
+  end
 end
