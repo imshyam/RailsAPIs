@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   post 'v1', to: 'v1#create'
 
+  get 'v1', to: 'v1#history'
+
   root 'v1#index'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
