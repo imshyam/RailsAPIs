@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170905090652) do
+ActiveRecord::Schema.define(version: 20170907095924) do
 
   create_table "currents", force: :cascade do |t|
     t.string "crypto_curr"
@@ -26,6 +26,16 @@ ActiveRecord::Schema.define(version: 20170905090652) do
     t.decimal "last_day_max", precision: 5, scale: 12
     t.decimal "last_week_max", precision: 5, scale: 12
     t.decimal "last_month_max", precision: 5, scale: 12
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "histories", force: :cascade do |t|
+    t.string "crypto_curr"
+    t.string "curr"
+    t.integer "exchange_id"
+    t.decimal "buy", precision: 5, scale: 12
+    t.decimal "sell", precision: 5, scale: 12
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

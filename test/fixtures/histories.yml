@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  crypto_curr: MyString
+  curr: MyString
+  exchange_id: 1
+  date_time: 2017-09-07 17:59:24
+  buy: 9.99
+  sell: 9.99
+
+two:
+  crypto_curr: MyString
+  curr: MyString
+  exchange_id: 1
+  date_time: 2017-09-07 17:59:24
+  buy: 9.99
+  sell: 9.99
