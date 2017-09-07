@@ -70,38 +70,6 @@
       },
       {
         "id": 2,
-        "name": "Unocoin",
-        "buy_fee": "0", 
-        "sell_fee": "0",
-        "app": "com.unocoin.unocoinwallet",
-        "web": "https://www.unocoin.com/",
-        "api": {
-          "all": {
-            "endpoint": "https://www.unocoin.com/trade?all",
-            "buyKey": "buy",
-            "sellKey": "sell",
-            "volumeKey": ""
-          }
-        }
-      },
-      {
-        "id": 3,
-        "name": "Coinsecure",
-        "buy_fee": "0", 
-        "sell_fee": "0",
-        "app": "com.coinsecure.bitcoinexchange",
-        "web": "https://coinsecure.in/",
-        "api": {
-          "all": {
-            "endpoint": "https://api.coinsecure.in/v1/exchange/ticker",
-            "buyKey": "message.ask",
-            "sellKey": "message.bid",
-            "volumeKey": "message.coinvolume"
-          }
-        }
-      },
-      {
-        "id": 4,
         "name": "Bitlio",
         "buy_fee": "0", 
         "sell_fee": "0",
