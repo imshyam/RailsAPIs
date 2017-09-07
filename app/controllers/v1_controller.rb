@@ -9,4 +9,7 @@ class V1Controller < ApplicationController
   def create
   	render plain: params[:v1].inspect
   end
+  def history
+  	@data = "Data"
+  end
 end
