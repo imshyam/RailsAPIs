@@ -8,10 +8,9 @@ class String
 end
 
 class GetData
-	@jsonData
 	def getResponse(api)
-		currentData = Hash['success'=> false, 'buy'=> -1, 'sell'=> -1, 'volume'=> -1]
 		# Buy, Sell and Volume are at same endpoint
+		currentEx = Hash['success'=> false, 'buy'=> -1, 'sell'=> -1, 'volume'=> -1]
 		if api.length == 1
 			url = api['all']['endpoint']
 			buy = api['all']['buyKey'].split('.')
@@ -27,24 +26,24 @@ class GetData
 			begin
 				response = JSON.parse(open(url).read)
 			rescue Exception => e
-				currentData["success"] = false
-				currentData["buy"] = -1
-				currentData["sell"] = -1
-				currentData["volume"] = -1
+				currentEx["success"] = false
+				currentEx["buy"] = -1
+				currentEx["sell"] = -1
+				currentEx["volume"] = -1
 			else
-				currentData["success"] = true
+				currentEx["success"] = true
 				tmp = response
 				for key in buy
 					key = key.is_i? ? key.to_i : key
 					tmp = tmp[key]
 				end
-				currentData["buy"] = tmp
+				currentEx["buy"] = tmp
 				tmp = response
 				for key in sell
 					key = key.is_i? ? key.to_i : key
 					tmp = tmp[key]
 				end
-				currentData["sell"] = tmp
+				currentEx["sell"] = tmp
 				if volume != -1
 					tmp = response
 					for key in volume
@@ -54,7 +53,7 @@ class GetData
 				else
 					tmp = -1
 				end
-				currentData["volume"] = tmp
+				currentEx["volume"] = tmp
 			end
 		# Buy, Sell and Volume are at different endpoint
 		else
@@ -72,10 +71,10 @@ class GetData
 			begin
 				response = JSON.parse(open(buyEndpoint).read)
 			rescue Exception => e
-				currentData["success"] = false
-				currentData["buy"] = -1
-				currentData["sell"] = -1
-				currentData["volume"] = -1
+				currentEx["success"] = false
+				currentEx["buy"] = -1
+				currentEx["sell"] = -1
+				currentEx["volume"] = -1
 				return
 			else
 				tmp = response
@@ -83,43 +82,43 @@ class GetData
 					key = key.is_i? ? key.to_i : key
 					tmp = tmp[key]
 				end
-				currentData["buy"] = tmp
+				currentEx["buy"] = tmp
 			end
 			# Get Sell Price
 			begin
 				response = JSON.parse(open(sellEndpoint).read)
 			rescue Exception => e
-				currentData["success"] = false
-				currentData["buy"] = -1
-				currentData["sell"] = -1
-				currentData["volume"] = -1
+				currentEx["success"] = false
+				currentEx["buy"] = -1
+				currentEx["sell"] = -1
+				currentEx["volume"] = -1
 				return
 			else
-				currentData["success"] = true
+				currentEx["success"] = true
 				tmp = response
 				for key in sellKey
 					key = key.is_i? ? key.to_i : key
 					tmp = tmp[key]
 				end
-				currentData["sell"] = tmp
+				currentEx["sell"] = tmp
 			end
 			# Get Volume if provided
 			if volumeKey != -1
 				begin
 					response = JSON.parse(open(volumeEndpoint).read)
 				rescue Exception => e
-					currentData["volume"] = -1
+					currentEx["volume"] = -1
 				else
 					tmp = response
 					for key in volumeKey
 						key = key.is_i? ? key.to_i : key
 						tmp = tmp[key]
 					end
-					currentData["volume"] = tmp
+					currentEx["volume"] = tmp
 				end
 			end
 		end
-		puts currentData
+		return currentEx
 	end
 	def getFileContents(file)
 		text = File.read(file)
@@ -132,17 +131,30 @@ class GetData
 		for keyCC in @jsonData.keys
 			for keyPC in @jsonData[keyCC].keys
 				for exchange in @jsonData[keyCC][keyPC]
-					puts "#{keyCC} #{keyPC} #{exchange['name']}"
 					result = getResponse(exchange['api'])
+					currentData = {}
+					currentData["crypto_curr"] = keyCC
+					currentData["curr"] = keyPC
+					currentData["exchange_id"] = exchange['id']
+					currentData["success"] = result["success"]
+					currentData["buy"] = result["buy"]
+					currentData["sell"] = result["sell"]
+					currentData["volume"] = result["volume"]
+					@result.push(currentData)
 				end
 			end
 		end
 	end
+	def getResult
+		return @result
+	end
 	def initialize
+		@result = []
 		path = './../../exchanges.json'
 		@jsonData = JSON.parse(getFileContents(path))
-		getCurrent
+		if @jsonData != -1
+			getCurrent
+		end
+		puts @result
 	end
 end
-
-GetData.new
