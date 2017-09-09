@@ -150,7 +150,7 @@ class GetData
 	end
 	def initialize
 		@result = []
-		path = './../../exchanges.json'
+		path = Rails.root + 'exchanges.json'
 		@jsonData = JSON.parse(getFileContents(path))
 		if @jsonData != -1
 			getCurrent
