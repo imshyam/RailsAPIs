@@ -150,10 +150,12 @@ class GetData
 	end
 	def initialize
 		@result = []
-		path = './../../exchanges.json'
+		path = './exchanges.json'
 		@jsonData = JSON.parse(getFileContents(path))
 		if @jsonData != -1
 			getCurrent
+		else
+			@result = []
 		end
 		puts @result
 	end
