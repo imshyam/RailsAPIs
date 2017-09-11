@@ -11,5 +11,10 @@ module RailsAPIs
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
+
+    config.after_initialize do
+    	x = GetData.new.getResult
+    	puts x
+    end
   end
 end
