@@ -14,7 +14,7 @@ def calculateLastMinMax(curr_data)
 end
 
 begin
-	db = SQLite3::Database.open "development.sqlite3"
+	db = SQLite3::Database.open "db/development.sqlite3"
 	db.execute "CREATE TABLE IF NOT EXISTS currents(
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
         		crypto_curr TEXT,
@@ -49,45 +49,68 @@ begin
     data = GetData.new.getResult
     for ex_data in data
     	if ex_data['success']
-	    	last_min_max = calculateLastMinMax(ex_data)
-	   	    query_current = "INSERT OR REPLACE INTO currents " +
-	   	    				"(crypto_curr, curr, exchange_id, date_time, " +
-	   	    				  "buy, sell, last_hour_min, last_day_min, last_week_min, " +
-	   	    				  "last_month_min, last_hour_max, last_day_max, last_week_max, " +
-	   	    				  "last_month_max)" +
-	   	    				"VALUES ("+
-							"\"" + ex_data['crypto_curr'] + "\", " +
-							"\"" + ex_data['curr'] + "\", " +
-							ex_data['exchange_id'].to_s + ", " +
-							"\"" + Time.now.getutc.to_s + "\", " +
-							ex_data['buy'].to_s + ", " + 
-							ex_data['sell'].to_s + ", " + 
-							last_min_max['last_hour_min'].to_s + ", " +
-							last_min_max['last_day_min'].to_s + ", " +
-							last_min_max['last_week_min'].to_s + ", " +
-							last_min_max['last_month_min'].to_s + ", " +
-							last_min_max['last_hour_max'].to_s + ", " +
-							last_min_max['last_day_max'].to_s + ", " +
-							last_min_max['last_week_max'].to_s + ", " +
-							last_min_max['last_month_max'].to_s +
-							")"
-			query_history = "INSERT INTO "+
-							"histories (crypto_curr, " +
-									   "curr, " +
-									   "exchange_id, " +
-									   "date_time, " +
-									   "buy, " +
-									   "sell) VALUES (" +
-							"\"" + ex_data['crypto_curr'] + "\", " +
-							"\"" + ex_data['curr'] + "\", " +
-							ex_data['exchange_id'].to_s + ", " +
-							Time.now.getutc.to_s + ", " +
-							ex_data['buy'].to_s + ", " + 
-							ex_data['sell'].to_s +
-							")"
-			puts query_current
-			puts query_history
-			db.execute query_current
+    		need_update = false
+    		buy_sell = db.execute "SELECT buy, sell FROM currents " +
+    			  "WHERE crypto_curr = \"" + ex_data['crypto_curr'] + "\" " +
+    			  "AND curr = \"" + ex_data['curr'] + "\" " +
+    			  "AND exchange_id = " + ex_data['exchange_id'].to_s
+    		puts "============================"
+    		puts buy_sell
+    		if !buy_sell.nil?
+	    		buy = buy_sell[0][0]
+	    		sell = buy_sell[0][1]
+	    		puts buy.to_s + " and " + ex_data['buy']
+	    		puts sell.to_s + " and " + ex_data['sell']
+    			puts "============================"
+	    		if buy != ex_data['buy']
+	    			need_update = true
+	    		end
+	    		if buy != ex_data['sell']
+	    			need_update = true
+	    		end
+	    	end
+    		if need_update
+    			puts "Need Update"
+		    	last_min_max = calculateLastMinMax(ex_data)
+		   	    query_current = "REPLACE INTO currents " +
+		   	    				"(crypto_curr, curr, exchange_id, date_time, " +
+		   	    				  "buy, sell, last_hour_min, last_day_min, last_week_min, " +
+		   	    				  "last_month_min, last_hour_max, last_day_max, last_week_max, " +
+		   	    				  "last_month_max)" +
+		   	    				"VALUES ("+
+								"\"" + ex_data['crypto_curr'] + "\", " +
+								"\"" + ex_data['curr'] + "\", " +
+								ex_data['exchange_id'].to_s + ", " +
+								"\"" + Time.now.getutc.to_s + "\", " +
+								ex_data['buy'].to_s + ", " + 
+								ex_data['sell'].to_s + ", " + 
+								last_min_max['last_hour_min'].to_s + ", " +
+								last_min_max['last_day_min'].to_s + ", " +
+								last_min_max['last_week_min'].to_s + ", " +
+								last_min_max['last_month_min'].to_s + ", " +
+								last_min_max['last_hour_max'].to_s + ", " +
+								last_min_max['last_day_max'].to_s + ", " +
+								last_min_max['last_week_max'].to_s + ", " +
+								last_min_max['last_month_max'].to_s +
+								")"
+				query_history = "INSERT INTO "+
+								"histories (crypto_curr, " +
+										   "curr, " +
+										   "exchange_id, " +
+										   "date_time, " +
+										   "buy, " +
+										   "sell) VALUES (" +
+								"\"" + ex_data['crypto_curr'] + "\", " +
+								"\"" + ex_data['curr'] + "\", " +
+								ex_data['exchange_id'].to_s + ", " +
+								Time.now.getutc.to_s + ", " +
+								ex_data['buy'].to_s + ", " + 
+								ex_data['sell'].to_s +
+								")"
+				puts query_current
+				puts query_history
+				db.execute query_current
+			end
 		else
 			puts ex_data
 		end
