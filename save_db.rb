@@ -59,8 +59,8 @@ begin
     		if !buy_sell.nil?
 	    		buy = buy_sell[0][0]
 	    		sell = buy_sell[0][1]
-	    		puts buy.to_s + " and " + ex_data['buy']
-	    		puts sell.to_s + " and " + ex_data['sell']
+	    		puts buy.to_s + " and " + ex_data['buy'].to_s
+	    		puts sell.to_s + " and " + ex_data['sell'].to_s
     			puts "============================"
 	    		if buy != ex_data['buy']
 	    			need_update = true
