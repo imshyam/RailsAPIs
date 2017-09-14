@@ -49,28 +49,21 @@ begin
     data = GetData.new.getResult
     for ex_data in data
     	if ex_data['success']
-    		need_update = false
+    		need_update = true
     		buy_sell = db.execute "SELECT buy, sell FROM currents " +
     			  "WHERE crypto_curr = \"" + ex_data['crypto_curr'] + "\" " +
     			  "AND curr = \"" + ex_data['curr'] + "\" " +
     			  "AND exchange_id = " + ex_data['exchange_id'].to_s
-    		puts "============================"
-    		puts buy_sell
-    		if !buy_sell.nil?
+    		if !buy_sell[0].nil?
 	    		buy = buy_sell[0][0]
 	    		sell = buy_sell[0][1]
-	    		puts buy.to_s + " and " + ex_data['buy'].to_s
-	    		puts sell.to_s + " and " + ex_data['sell'].to_s
-    			puts "============================"
-	    		if buy != ex_data['buy']
-	    			need_update = true
-	    		end
-	    		if buy != ex_data['sell']
-	    			need_update = true
+	    		buy_last = ex_data['buy'].to_f
+	    		sell_last = ex_data['sell'].to_f
+	    		if buy == buy_last && sell == sell_last
+	    			need_update = false
 	    		end
 	    	end
     		if need_update
-    			puts "Need Update"
 		    	last_min_max = calculateLastMinMax(ex_data)
 		   	    query_current = "REPLACE INTO currents " +
 		   	    				"(crypto_curr, curr, exchange_id, date_time, " +
@@ -103,13 +96,12 @@ begin
 								"\"" + ex_data['crypto_curr'] + "\", " +
 								"\"" + ex_data['curr'] + "\", " +
 								ex_data['exchange_id'].to_s + ", " +
-								Time.now.getutc.to_s + ", " +
+								"\"" + Time.now.getutc.to_s + "\", " +
 								ex_data['buy'].to_s + ", " + 
 								ex_data['sell'].to_s +
 								")"
-				puts query_current
-				puts query_history
 				db.execute query_current
+				db.execute query_history
 			end
 		else
 			puts ex_data
