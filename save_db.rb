@@ -2,14 +2,23 @@ require './get_current.rb'
 require 'sqlite3'
 
 def calculateLastMinMax(curr_data)
-	x = Hash['last_hour_min'=> -1,
-			 'last_day_min'=> -1,
-			 'last_week_min'=> -1,
-			 'last_month_min'=> -1,
-			 'last_hour_max'=> -1,
-			 'last_day_max'=> -1,
-			 'last_week_max'=> -1,
-			 'last_month_max'=> -1]
+	query_last_hour_min = "SELECT MAX(buy) FROM 'currents' where date_time > datetime('now', '-24 hours') and crypto_curr = "Bitcoin" and curr = "SGD" and exchange_id = 1;"
+	x = Hash['last_hour_min_buy'=> -1,
+			 'last_day_min_buy'=> -1,
+			 'last_week_min_buy'=> -1,
+			 'last_month_min_buy'=> -1,
+			 'last_hour_max_buy'=> -1,
+			 'last_day_max_buy'=> -1,
+			 'last_week_max_buy'=> -1,
+			 'last_month_max_buy'=> -1],
+			 'last_hour_min_sell'=> -1,
+			 'last_day_min_sell'=> -1,
+			 'last_week_min_sell'=> -1,
+			 'last_month_min_sell'=> -1,
+			 'last_hour_max_sell'=> -1,
+			 'last_day_max_sell'=> -1,
+			 'last_week_max_sell'=> -1,
+			 'last_month_max_sell'=> -1]
 	return x
 end
 
@@ -23,14 +32,22 @@ begin
         		date_time DATETIME DEFAULT CURRENT_TIMESTAMP,
         		buy DOUBLE,
         		sell DOUBLE,
-        		last_hour_min DOUBLE,
-        		last_day_min DOUBLE,
-        		last_week_min DOUBLE,
-        		last_month_min DOUBLE,
-        		last_hour_max DOUBLE,
-        		last_day_max DOUBLE,
-        		last_week_max DOUBLE,
-        		last_month_max DOUBLE
+        		last_hour_min_buy DOUBLE,
+        		last_day_min_buy DOUBLE,
+        		last_week_min_buy DOUBLE,
+        		last_month_min_buy DOUBLE,
+        		last_hour_max_buy DOUBLE,
+        		last_day_max_buy DOUBLE,
+        		last_week_max_buy DOUBLE,
+        		last_month_max_buy DOUBLE,
+        		last_hour_min_sell DOUBLE,
+        		last_day_min_sell DOUBLE,
+        		last_week_min_sell DOUBLE,
+        		last_month_min_sell DOUBLE,
+        		last_hour_max_sell DOUBLE,
+        		last_day_max_sell DOUBLE,
+        		last_week_max_sell DOUBLE,
+        		last_month_max_sell DOUBLE
         		)"
     # Make Unique index
     db.execute "CREATE UNIQUE INDEX IF NOT EXISTS " +
