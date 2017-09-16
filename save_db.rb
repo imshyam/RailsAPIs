@@ -2,7 +2,54 @@ require './get_current.rb'
 require 'sqlite3'
 
 def calculateLastMinMax(curr_data)
-	query_last_hour_min = "SELECT MAX(buy) FROM 'currents' where date_time > datetime('now', '-24 hours') and crypto_curr = "Bitcoin" and curr = "SGD" and exchange_id = 1;"
+	query_last_hour_max_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_hour_max_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_hour_min_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_hour_min_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_day_max_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_day_max_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_day_min_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_day_min_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_week_max_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_week_max_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_week_min_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_week_min_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_month_max_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_month_max_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_month_min_buy = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
+	query_last_month_min_sell = "SELECT MAX(buy) FROM currents where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
+						  curr_data['crypto_curr'] + "\" and curr = \""+
+						  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
 	x = Hash['last_hour_min_buy'=> -1,
 			 'last_day_min_buy'=> -1,
 			 'last_week_min_buy'=> -1,
