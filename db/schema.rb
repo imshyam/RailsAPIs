@@ -13,31 +13,30 @@
 ActiveRecord::Schema.define(version: 20170907095924) do
 
   create_table "currents", force: :cascade do |t|
-    t.string "crypto_curr"
-    t.string "curr"
+    t.text "crypto_curr"
+    t.text "curr"
     t.integer "exchange_id"
-    t.decimal "buy", precision: 5, scale: 12
-    t.decimal "sell", precision: 5, scale: 12
-    t.decimal "last_hour_min", precision: 5, scale: 12
-    t.decimal "last_day_min", precision: 5, scale: 12
-    t.decimal "last_week_min", precision: 5, scale: 12
-    t.decimal "last_month_min", precision: 5, scale: 12
-    t.decimal "last_hour_max", precision: 5, scale: 12
-    t.decimal "last_day_max", precision: 5, scale: 12
-    t.decimal "last_week_max", precision: 5, scale: 12
-    t.decimal "last_month_max", precision: 5, scale: 12
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "date_time"
+    t.float "buy"
+    t.float "sell"
+    t.float "last_hour_min"
+    t.float "last_day_min"
+    t.float "last_week_min"
+    t.float "last_month_min"
+    t.float "last_hour_max"
+    t.float "last_day_max"
+    t.float "last_week_max"
+    t.float "last_month_max"
+    t.index ["crypto_curr", "curr", "exchange_id"], name: "crypto_curr_id", unique: true
   end
 
   create_table "histories", force: :cascade do |t|
-    t.string "crypto_curr"
-    t.string "curr"
+    t.text "crypto_curr"
+    t.text "curr"
     t.integer "exchange_id"
-    t.decimal "buy", precision: 5, scale: 12
-    t.decimal "sell", precision: 5, scale: 12
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "date_time"
+    t.float "buy"
+    t.float "sell"
   end
 
 end
