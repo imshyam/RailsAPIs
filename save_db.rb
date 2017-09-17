@@ -1,79 +1,76 @@
 require './get_current.rb'
 require 'sqlite3'
 class SaveDB
+	@db
+	def getQuery(curr_data, min_max, buy_sell, time)
+		query_prefix  = "FROM histories where date_time > datetime(\"now\", \""
+		query_suffix = "\") and crypto_curr = \"" +  curr_data['crypto_curr'] + "\" and curr = \"" +
+							  curr_data['curr'] + "\" and exchange_id = " + curr_data['exchange_id'].to_s
+		return "SELECT " + min_max + "(" + buy_sell+ ") " + query_prefix + time + query_suffix
+	end
 	def calculateLastMinMax(curr_data)
-		query_last_hour_max_buy = "SELECT MAX(buy) FROM histories where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		x = db.execute query_last_hour_max_buy
-		
-		query_last_hour_max_sell = "SELECT MAX(sell) FROM histories where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_hour_min_buy = "SELECT MIN(buy) FROM histories where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_hour_min_sell = "SELECT MIN(sell) FROM histories where date_time > datetime('now', '-1 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_day_max_buy = "SELECT MAX(buy) FROM histories where date_time > datetime('now', '-24 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_day_max_sell = "SELECT MAX(sell) FROM histories where date_time > datetime('now', '-24 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_day_min_buy = "SELECT MIN(buy) FROM histories where date_time > datetime('now', '-24 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_day_min_sell = "SELECT MIN(sell) FROM histories where date_time > datetime('now', '-24 hours') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_week_max_buy = "SELECT MAX(buy) FROM histories where date_time > datetime('now', '-7 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_week_max_sell = "SELECT MAX(sell) FROM histories where date_time > datetime('now', '-7 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_week_min_buy = "SELECT MIN(buy) FROM histories where date_time > datetime('now', '-7 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_week_min_sell = "SELECT MIN(sell) FROM histories where date_time > datetime('now', '-7 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_month_max_buy = "SELECT MAX(buy) FROM histories where date_time > datetime('now', '-30 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_month_max_sell = "SELECT MAX(sell) FROM histories where date_time > datetime('now', '-30 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_month_min_buy = "SELECT MIN(buy) FROM histories where date_time > datetime('now', '-30 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		query_last_month_min_sell = "SELECT MIN(sell) FROM histories where date_time > datetime('now', '-30 days') and crypto_curr = \""+
-							  curr_data['crypto_curr'] + "\" and curr = \""+
-							  curr_data['curr']"\" and exchange_id = " + curr_data['exchange_id']
-		x = Hash['last_hour_min_buy'=> -1,
-				 'last_day_min_buy'=> -1,
-				 'last_week_min_buy'=> -1,
-				 'last_month_min_buy'=> -1,
-				 'last_hour_max_buy'=> -1,
-				 'last_day_max_buy'=> -1,
-				 'last_week_max_buy'=> -1,
-				 'last_month_max_buy'=> -1],
-				 'last_hour_min_sell'=> -1,
-				 'last_day_min_sell'=> -1,
-				 'last_week_min_sell'=> -1,
-				 'last_month_min_sell'=> -1,
-				 'last_hour_max_sell'=> -1,
-				 'last_day_max_sell'=> -1,
-				 'last_week_max_sell'=> -1,
-				 'last_month_max_sell'=> -1]
+		# Last Hour : MIN MAX : BUY SELL
+		query_last_hour_max_buy = getQuery(curr_data, "MAX", "buy", "-1 hours")
+		last_hour_max_buy = @db.execute query_last_hour_max_buy
+		query_last_hour_max_sell = getQuery(curr_data, "MAX", "sell", "-1 hours")
+		last_hour_max_sell = @db.execute query_last_hour_max_sell
+		query_last_hour_min_buy = getQuery(curr_data, "MIN", "buy", "-1 hours")
+		last_hour_min_buy = @db.execute query_last_hour_min_buy
+		query_last_hour_min_sell = getQuery(curr_data, "MIN", "sell", "-1 hours")
+		last_hour_min_sell = @db.execute query_last_hour_min_sell
+
+		# Last Day : MIN MAX : BUY SELL
+		query_last_day_max_buy = getQuery(curr_data, "MAX", "buy", "-24 hours")
+		last_day_max_buy = @db.execute query_last_day_max_buy
+		query_last_day_max_sell = getQuery(curr_data, "MAX", "sell", "-24 hours")
+		last_day_max_sell = @db.execute query_last_day_max_sell
+		query_last_day_min_buy = getQuery(curr_data, "MIN", "buy", "-24 hours")
+		last_day_min_buy = @db.execute query_last_day_min_buy
+		query_last_day_min_sell = getQuery(curr_data, "MIN", "sell", "-24 hours")
+		last_day_min_sell = @db.execute query_last_day_min_sell
+
+		# Last Week : MIN MAX : BUY SELL
+		query_last_week_max_buy = getQuery(curr_data, "MAX", "buy", "-7 days")
+		last_week_max_buy = @db.execute query_last_week_max_buy
+		query_last_week_max_sell = getQuery(curr_data, "MAX", "sell", "-7 days")
+		last_week_max_sell = @db.execute query_last_week_max_sell
+		query_last_week_min_buy = getQuery(curr_data, "MIN", "buy", "-7 days")
+		last_week_min_buy = @db.execute query_last_week_min_buy
+		query_last_week_min_sell = getQuery(curr_data, "MIN", "sell", "-7 days")
+		last_week_min_sell = @db.execute query_last_week_min_sell
+
+		# Last Month : MIN MAX : BUY SELL
+		query_last_month_max_buy = getQuery(curr_data, "MAX", "buy", "-30 days")
+		last_month_max_buy = @db.execute query_last_month_max_buy
+		query_last_month_max_sell = getQuery(curr_data, "MAX", "sell", "-30 days")
+		last_month_max_sell = @db.execute query_last_month_max_sell
+		query_last_month_min_buy = getQuery(curr_data, "MIN", "buy", "-30 days")
+		last_month_min_buy = @db.execute query_last_month_min_buy
+		query_last_month_min_sell = getQuery(curr_data, "MIN", "sell", "-30 days")
+		last_month_min_sell = @db.execute query_last_month_min_sell
+
+		x = Hash['last_hour_min_buy'=> last_hour_min_buy,
+				 'last_day_min_buy'=> last_day_min_buy,
+				 'last_week_min_buy'=> last_week_min_buy,
+				 'last_month_min_buy'=> last_month_min_buy,
+				 'last_hour_max_buy'=> last_hour_max_buy,
+				 'last_day_max_buy'=> last_day_max_buy,
+				 'last_week_max_buy'=> last_week_max_buy,
+				 'last_month_max_buy'=> last_month_max_buy,
+				 'last_hour_min_sell'=> last_hour_min_sell,
+				 'last_day_min_sell'=> last_day_min_sell,
+				 'last_week_min_sell'=> last_week_min_sell,
+				 'last_month_min_sell'=> last_month_min_sell,
+				 'last_hour_max_sell'=> last_hour_max_sell,
+				 'last_day_max_sell'=> last_day_max_sell,
+				 'last_week_max_sell'=> last_week_max_sell,
+				 'last_month_max_sell'=> last_month_max_sell]
 		return x
 	end
 
 	def initialize
-		db = SQLite3::Database.open "db/development.sqlite3"
-		db.execute "CREATE TABLE IF NOT EXISTS currents(
+		@db = SQLite3::Database.open "db/development.sqlite3"
+		@db.execute "CREATE TABLE IF NOT EXISTS currents(
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
 	        		crypto_curr TEXT,
 	        		curr TEXT,
@@ -99,11 +96,11 @@ class SaveDB
 	        		last_month_max_sell DOUBLE
 	        		)"
 	    # Make Unique index
-	    db.execute "CREATE UNIQUE INDEX IF NOT EXISTS " +
+	    @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS " +
 	    			"crypto_curr_id " +
 	    			"ON " +
 	    			"currents (crypto_curr, curr, exchange_id);"
-	    db.execute "CREATE TABLE IF NOT EXISTS histories(
+	    @db.execute "CREATE TABLE IF NOT EXISTS histories(
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
 	        		crypto_curr TEXT,
 	        		curr TEXT,
@@ -116,7 +113,7 @@ class SaveDB
 	    for ex_data in data
 	    	if ex_data['success']
 	    		need_update = true
-	    		buy_sell = db.execute "SELECT buy, sell FROM currents " +
+	    		buy_sell = @db.execute "SELECT buy, sell FROM currents " +
 	    			  "WHERE crypto_curr = \"" + ex_data['crypto_curr'] + "\" " +
 	    			  "AND curr = \"" + ex_data['curr'] + "\" " +
 	    			  "AND exchange_id = " + ex_data['exchange_id'].to_s
@@ -174,8 +171,9 @@ class SaveDB
 									ex_data['buy'].to_s + ", " + 
 									ex_data['sell'].to_s +
 									")"
-					db.execute query_current
-					db.execute query_history
+					puts query_history
+					@db.execute query_history
+					@db.execute query_current
 				end
 			else
 				puts ex_data
@@ -185,6 +183,6 @@ class SaveDB
 		puts "Exception"
 		puts e
 	ensure
-		db.close if db
+		@db.close if @db
 	end
 end
