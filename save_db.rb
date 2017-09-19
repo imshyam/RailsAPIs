@@ -11,43 +11,43 @@ class SaveDB
 	def calculateLastMinMax(curr_data)
 		# Last Hour : MIN MAX : BUY SELL
 		query_last_hour_max_buy = getQuery(curr_data, "MAX", "buy", "-1 hours")
-		last_hour_max_buy = @db.execute query_last_hour_max_buy
+		last_hour_max_buy = (@db.execute query_last_hour_max_buy)[0][0]
 		query_last_hour_max_sell = getQuery(curr_data, "MAX", "sell", "-1 hours")
-		last_hour_max_sell = @db.execute query_last_hour_max_sell
+		last_hour_max_sell = (@db.execute query_last_hour_max_sell)[0][0]
 		query_last_hour_min_buy = getQuery(curr_data, "MIN", "buy", "-1 hours")
-		last_hour_min_buy = @db.execute query_last_hour_min_buy
+		last_hour_min_buy = (@db.execute query_last_hour_min_buy)[0][0]
 		query_last_hour_min_sell = getQuery(curr_data, "MIN", "sell", "-1 hours")
-		last_hour_min_sell = @db.execute query_last_hour_min_sell
+		last_hour_min_sell = (@db.execute query_last_hour_min_sell)[0][0]
 
 		# Last Day : MIN MAX : BUY SELL
 		query_last_day_max_buy = getQuery(curr_data, "MAX", "buy", "-24 hours")
-		last_day_max_buy = @db.execute query_last_day_max_buy
+		last_day_max_buy = (@db.execute query_last_day_max_buy)[0][0]
 		query_last_day_max_sell = getQuery(curr_data, "MAX", "sell", "-24 hours")
-		last_day_max_sell = @db.execute query_last_day_max_sell
+		last_day_max_sell = (@db.execute query_last_day_max_sell)[0][0]
 		query_last_day_min_buy = getQuery(curr_data, "MIN", "buy", "-24 hours")
-		last_day_min_buy = @db.execute query_last_day_min_buy
+		last_day_min_buy = (@db.execute query_last_day_min_buy)[0][0]
 		query_last_day_min_sell = getQuery(curr_data, "MIN", "sell", "-24 hours")
-		last_day_min_sell = @db.execute query_last_day_min_sell
+		last_day_min_sell = (@db.execute query_last_day_min_sell)[0][0]
 
 		# Last Week : MIN MAX : BUY SELL
 		query_last_week_max_buy = getQuery(curr_data, "MAX", "buy", "-7 days")
-		last_week_max_buy = @db.execute query_last_week_max_buy
+		last_week_max_buy = (@db.execute query_last_week_max_buy)[0][0]
 		query_last_week_max_sell = getQuery(curr_data, "MAX", "sell", "-7 days")
-		last_week_max_sell = @db.execute query_last_week_max_sell
+		last_week_max_sell = (@db.execute query_last_week_max_sell)[0][0]
 		query_last_week_min_buy = getQuery(curr_data, "MIN", "buy", "-7 days")
-		last_week_min_buy = @db.execute query_last_week_min_buy
+		last_week_min_buy = (@db.execute query_last_week_min_buy)[0][0]
 		query_last_week_min_sell = getQuery(curr_data, "MIN", "sell", "-7 days")
-		last_week_min_sell = @db.execute query_last_week_min_sell
+		last_week_min_sell = (@db.execute query_last_week_min_sell)[0][0]
 
 		# Last Month : MIN MAX : BUY SELL
 		query_last_month_max_buy = getQuery(curr_data, "MAX", "buy", "-30 days")
-		last_month_max_buy = @db.execute query_last_month_max_buy
+		last_month_max_buy = (@db.execute query_last_month_max_buy)[0][0]
 		query_last_month_max_sell = getQuery(curr_data, "MAX", "sell", "-30 days")
-		last_month_max_sell = @db.execute query_last_month_max_sell
+		last_month_max_sell = (@db.execute query_last_month_max_sell)[0][0]
 		query_last_month_min_buy = getQuery(curr_data, "MIN", "buy", "-30 days")
-		last_month_min_buy = @db.execute query_last_month_min_buy
+		last_month_min_buy = (@db.execute query_last_month_min_buy)[0][0]
 		query_last_month_min_sell = getQuery(curr_data, "MIN", "sell", "-30 days")
-		last_month_min_sell = @db.execute query_last_month_min_sell
+		last_month_min_sell = (@db.execute query_last_month_min_sell)[0][0]
 
 		x = Hash['last_hour_min_buy'=> last_hour_min_buy,
 				 'last_day_min_buy'=> last_day_min_buy,
@@ -132,7 +132,7 @@ class SaveDB
 			   	    				"(crypto_curr, curr, exchange_id, date_time, " +
 			   	    				  "buy, sell, last_hour_min_buy, last_hour_min_sell, last_day_min_buy, last_day_min_sell, last_week_min_buy, last_week_min_sell, " +
 			   	    				  "last_month_min_buy, last_month_min_sell, last_hour_max_buy, last_hour_max_sell, last_day_max_buy, last_day_max_sell, "+
-			   	    				  "last_week_max_buy, last_week_max_sell, last_month_max_buy, last_month_max_sell" +
+			   	    				  "last_week_max_buy, last_week_max_sell, last_month_max_buy, last_month_max_sell) " +
 			   	    				"VALUES ("+
 									"\"" + ex_data['crypto_curr'] + "\", " +
 									"\"" + ex_data['curr'] + "\", " +
@@ -171,7 +171,6 @@ class SaveDB
 									ex_data['buy'].to_s + ", " + 
 									ex_data['sell'].to_s +
 									")"
-					puts query_history
 					@db.execute query_history
 					@db.execute query_current
 				end
