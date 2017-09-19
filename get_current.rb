@@ -157,6 +157,5 @@ class GetData
 		else
 			@result = []
 		end
-		puts @result
 	end
 end
