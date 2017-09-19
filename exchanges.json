@@ -253,22 +253,6 @@
       },
       {
         "id": 4,
-        "name": "LakeBTC",
-        "buy_fee": "0", 
-        "sell_fee": "0",
-        "app": "",
-        "web": "https://www.lakebtc.com/",
-        "api": {
-          "all": {
-            "endpoint": "https://api.LakeBTC.com/api_v2/ticker",
-            "buyKey": "btceur.ask",
-            "sellKey": "btceur.bid",
-            "volumeKey": "btceur.volume"
-          }
-        }
-      },
-      {
-        "id": 5,
         "name": "Bitstamp",
         "buy_fee": "0", 
         "sell_fee": "0",
@@ -284,7 +268,7 @@
         }
       },
       {
-        "id": 6,
+        "id": 5,
         "name": "GDAX",
         "buy_fee": "0", 
         "sell_fee": "0",
