@@ -174,8 +174,6 @@ class SaveDB
 					@db.execute query_history
 					@db.execute query_current
 				end
-			else
-				puts ex_data
 			end
 		end
 	rescue SQLite3::Exception => e
