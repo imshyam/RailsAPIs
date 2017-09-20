@@ -8,6 +8,8 @@ Bundler.require(*Rails.groups)
 
 module RailsAPIs
   class Application < Rails::Application
+  	#For API only
+  	config.api_only = true
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
   end
