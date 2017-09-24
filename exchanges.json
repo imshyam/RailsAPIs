@@ -346,7 +346,7 @@
     }
   },
   {
-    "id": 20,
+    "id": 1001,
     "name": "Coinbase",
     "crypto_currency": "Ethereum",
     "currency": "SGD",
@@ -365,7 +365,7 @@
       }
     }
   },{
-    "id": 21,
+    "id": 1002,
     "name": "Coinhako",
     "crypto_currency": "Ethereum",
     "currency": "SGD",
@@ -382,7 +382,7 @@
     }
   },
   {
-    "id": 22,
+    "id": 1003,
     "name": "Coinbase",
     "crypto_currency": "Ethereum",
     "currency": "USD",
@@ -401,7 +401,7 @@
       }
     }
   },{
-    "id": 23,
+    "id": 1004,
     "name": "Coinhako",
     "crypto_currency": "Ethereum",
     "currency": "USD",
