@@ -128,21 +128,18 @@ class GetData
 		return -1
 	end
 	def getCurrent
-		for keyCC in @jsonData.keys
-			for keyPC in @jsonData[keyCC].keys
-				for exchange in @jsonData[keyCC][keyPC]
-					result = getResponse(exchange['api'])
-					currentData = {}
-					currentData["crypto_curr"] = keyCC
-					currentData["curr"] = keyPC
-					currentData["exchange_id"] = exchange['id']
-					currentData["success"] = result["success"]
-					currentData["buy"] = result["buy"]
-					currentData["sell"] = result["sell"]
-					currentData["volume"] = result["volume"]
-					@result.push(currentData)
-				end
-			end
+		for exchange in @jsonData
+			result = getResponse(exchange['api'])
+			currentData = {}
+			currentData["crypto_curr"] = exchange['crypto_currency']
+			currentData["curr"] = exchange['currency']
+			currentData["exchange_id"] = exchange['id']
+			currentData["success"] = result["success"]
+			currentData["buy"] = result["buy"]
+			currentData["sell"] = result["sell"]
+			currentData["volume"] = result["volume"]
+			puts currentData
+			@result.push(currentData)
 		end
 	end
 	def getResult
