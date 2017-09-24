@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
   #get 'v1/index'
 
-  match ':controller(/:action(/:id))', :via => :get
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :current
+    end
+  end
 
-  post 'v1', to: 'v1#create'
-
-  get 'v1', to: 'v1#history'
-
-  root 'v1#index'
-
+  resources :current
+  root to: 'current#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
