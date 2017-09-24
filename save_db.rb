@@ -8,6 +8,12 @@ class SaveDB
 							  curr_data['curr'] + "\" and exchange_id = " + curr_data['exchange_id'].to_s
 		return "SELECT " + min_max + "(" + buy_sell+ ") " + query_prefix + time + query_suffix
 	end
+	def compareMinWithCurrent(minh, curr){
+		return [minh.nil? ? curr : minh, curr].min
+	}
+	def compareMaxWithCurrent(maxh, curr){
+		return [maxh.nil? ? curr : maxh, curr].max
+	}
 	def calculateLastMinMax(curr_data)
 		# Last Hour : MIN MAX : BUY SELL
 		query_last_hour_max_buy = getQuery(curr_data, "MAX", "buy", "-1 hours")
@@ -49,22 +55,23 @@ class SaveDB
 		query_last_month_min_sell = getQuery(curr_data, "MIN", "sell", "-30 days")
 		last_month_min_sell = (@db.execute query_last_month_min_sell)[0][0]
 
-		x = Hash['last_hour_min_buy'=> last_hour_min_buy,
-				 'last_day_min_buy'=> last_day_min_buy,
-				 'last_week_min_buy'=> last_week_min_buy,
-				 'last_month_min_buy'=> last_month_min_buy,
-				 'last_hour_max_buy'=> last_hour_max_buy,
-				 'last_day_max_buy'=> last_day_max_buy,
-				 'last_week_max_buy'=> last_week_max_buy,
-				 'last_month_max_buy'=> last_month_max_buy,
-				 'last_hour_min_sell'=> last_hour_min_sell,
-				 'last_day_min_sell'=> last_day_min_sell,
-				 'last_week_min_sell'=> last_week_min_sell,
-				 'last_month_min_sell'=> last_month_min_sell,
-				 'last_hour_max_sell'=> last_hour_max_sell,
-				 'last_day_max_sell'=> last_day_max_sell,
-				 'last_week_max_sell'=> last_week_max_sell,
-				 'last_month_max_sell'=> last_month_max_sell]
+		x = Hash['last_hour_min_buy'=> compareMinWithCurr(last_hour_min_buy, curr_data['buy']),
+				 'last_day_min_buy'=> compareMinWithCurr(last_day_min_buy, curr_data['buy']),
+				 'last_week_min_buy'=> compareMinWithCurr(last_week_min_buy, curr_data['buy']),
+				 'last_month_min_buy'=> compareMinWithCurr(last_month_min_buy, curr_data['buy']),
+				 'last_hour_max_buy'=> compareMaxWithCurr(last_hour_max_buy, curr_data['buy']),
+				 'last_day_max_buy'=> compareMaxWithCurr(last_day_max_buy, curr_data['buy']),
+				 'last_week_max_buy'=> compareMaxWithCurr(last_week_max_buy, curr_data['buy']),
+				 'last_month_max_buy'=> compareMaxWithCurr(last_month_max_buy, curr_data['buy']),
+				 'last_hour_min_sell'=> compareMinWithCurr(last_hour_min_sell, curr_data['sell']),
+				 'last_day_min_sell'=> compareMinWithCurr(last_day_min_sell, curr_data['sell']),
+				 'last_week_min_sell'=> compareMinWithCurr(last_week_min_sell, curr_data['sell']),
+				 'last_month_min_sell'=> compareMinWithCurr(last_month_min_sell, curr_data['sell']),
+				 'last_hour_max_sell'=> compareMaxWithCurr(last_hour_max_sell, curr_data['sell']),
+				 'last_day_max_sell'=> compareMaxWithCurr(last_day_max_sell, curr_data['sell']),
+				 'last_week_max_sell'=> compareMaxWithCurr(last_week_max_sell, curr_data['sell']),
+				 'last_month_max_sell'=> compareMaxWithCurr(last_month_max_sell, curr_data['sell'])]
+		puts x
 		return x
 	end
 
@@ -171,7 +178,12 @@ class SaveDB
 									ex_data['buy'].to_s + ", " + 
 									ex_data['sell'].to_s +
 									")"
+					puts "====================================================="
+					puts query_history
 					@db.execute query_history
+					puts "*****************************"
+					puts query_current
+					puts "====================================================="
 					@db.execute query_current
 				end
 			end
