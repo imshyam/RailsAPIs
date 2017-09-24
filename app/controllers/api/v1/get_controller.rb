@@ -29,7 +29,6 @@ module Api
                     "last_week_max_sell" => data.last_week_max_sell,
                     "last_month_max_sell" => data.last_month_max_sell]
           @completeData.push(dataJson)
-          puts dataJson
         end
         render json: @completeData
       end
@@ -44,7 +43,6 @@ module Api
                     "buy" => data.buy,
                     "sell" => data.sell]
           @completeData.push(dataJson)
-          puts dataJson
         end
         render json: @completeData
       end
