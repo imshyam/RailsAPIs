@@ -7,6 +7,7 @@ class CreateCurrents < ActiveRecord::Migration[5.1]
       t.integer :exchange_id
       t.decimal :buy
       t.decimal :sell
+      t.decimal :volume
       t.decimal :last_hour_min
       t.decimal :last_day_min
       t.decimal :last_week_min
