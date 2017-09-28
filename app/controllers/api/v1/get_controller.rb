@@ -3,7 +3,9 @@ module Api
     class GetController < ApplicationController
 
       def current
-        dataList = Current.all
+        ids = params[:id]
+        idList = ids.split(',')
+        dataList = Current.where(exchange_id: idList)
         @completeData = []
         for data in dataList
           dataJson = Hash["crypto_curr" => data.crypto_curr,
