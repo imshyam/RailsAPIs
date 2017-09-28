@@ -3,7 +3,7 @@ module Api
     class GetController < ApplicationController
 
       def current
-        ids = params[:id]
+        ids = params[:ids]
         idList = ids.split(',')
         dataList = Current.where(exchange_id: idList)
         @completeData = []
@@ -35,7 +35,18 @@ module Api
         render json: @completeData
       end
       def history
-        dataList = History.all
+        ids = params[:ids]
+        days = params[:days]
+        hours = params[:hours]
+        idList = ids.split(',')
+        if !days.nil?
+          days = days.to_i
+          dataList = History.where(exchange_id: idList).where("date_time >= ?", days.days.ago.utc)
+        end
+        if !hours.nil?
+          hours = hours.to_i
+          dataList = History.where(exchange_id: idList).where("date_time >= ?", hours.hours.ago.utc)
+        end
         @completeData = []
         for data in dataList
           dataJson = Hash["crypto_curr" => data.crypto_curr,
