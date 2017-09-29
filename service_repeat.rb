@@ -1,7 +1,7 @@
 require './save_db.rb'
 
 i = 0
-while i < 10
+while 1
 	SaveDB.new
 	i++
 	sleep(30)

@@ -138,7 +138,6 @@ class GetData
 			currentData["buy"] = result["buy"]
 			currentData["sell"] = result["sell"]
 			currentData["volume"] = result["volume"]
-			puts currentData
 			@result.push(currentData)
 		end
 	end
