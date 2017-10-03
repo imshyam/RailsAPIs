@@ -15,8 +15,8 @@ class CreateCurrents < ActiveRecord::Migration[5.1]
       t.decimal :last_day_max
       t.decimal :last_week_max
       t.decimal :last_month_max
+      t.datetime :date_time
 
-      t.timestamps :date_time
     end
   end
 end

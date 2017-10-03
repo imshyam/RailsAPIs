@@ -6,8 +6,8 @@ class CreateHistories < ActiveRecord::Migration[5.1]
       t.integer :exchange_id
       t.decimal :buy
       t.decimal :sell
-
-      t.timestamps :date_time
+      t.datetime :date_time
+      
     end
   end
 end
