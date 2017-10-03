@@ -7,14 +7,22 @@ class CreateCurrents < ActiveRecord::Migration[5.1]
       t.decimal :buy
       t.decimal :sell
       t.decimal :volume
-      t.decimal :last_hour_min
-      t.decimal :last_day_min
-      t.decimal :last_week_min
-      t.decimal :last_month_min
-      t.decimal :last_hour_max
-      t.decimal :last_day_max
-      t.decimal :last_week_max
-      t.decimal :last_month_max
+      t.float :last_hour_min_buy
+      t.float :last_day_min_buy
+      t.float :last_week_min_buy
+      t.float :last_month_min_buy
+      t.float :last_hour_max_buy
+      t.float :last_day_max_buy
+      t.float :last_week_max_buy
+      t.float :last_month_max_buy
+      t.float :last_hour_min_sell
+      t.float :last_day_min_sell
+      t.float :last_week_min_sell
+      t.float :last_month_min_sell
+      t.float :last_hour_max_sell
+      t.float :last_day_max_sell
+      t.float :last_week_max_sell
+      t.float :last_month_max_sell
       t.datetime :date_time
 
     end

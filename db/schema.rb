@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 20170907095924) do
     t.float "last_day_max_sell"
     t.float "last_week_max_sell"
     t.float "last_month_max_sell"
-    t.datetime "date_time"
     t.index ["crypto_curr", "curr", "exchange_id"], name: "crypto_curr_id", unique: true
   end
 
@@ -47,7 +46,6 @@ ActiveRecord::Schema.define(version: 20170907095924) do
     t.datetime "date_time"
     t.float "buy"
     t.float "sell"
-    t.datetime "date_time"
   end
 
 end
