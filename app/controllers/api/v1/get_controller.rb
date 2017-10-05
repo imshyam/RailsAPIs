@@ -14,6 +14,7 @@ module Api
                     "date_time" => data.date_time,
                     "buy" => data.buy,
                     "sell" => data.sell,
+                    "volume" => data.volume,
                     "last_hour_min_buy" => data.last_hour_min_buy,
                     "last_day_min_buy" => data.last_day_min_buy,
                     "last_week_min_buy" => data.last_week_min_buy,
