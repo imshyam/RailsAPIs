@@ -35,20 +35,32 @@ class GetData
 				tmp = response
 				for key in buy
 					key = key.is_i? ? key.to_i : key
-					tmp = tmp[key]
+					if !tmp.nil?
+						tmp = tmp[key]
+					else
+						tmp = -1
+					end
 				end
 				currentEx["buy"] = tmp
 				tmp = response
 				for key in sell
 					key = key.is_i? ? key.to_i : key
-					tmp = tmp[key]
+					if !tmp.nil?
+						tmp = tmp[key]
+					else
+						tmp = -1
+					end
 				end
 				currentEx["sell"] = tmp
 				if volume != -1
 					tmp = response
 					for key in volume
 						key = key.is_i? ? key.to_i : key
-						tmp = tmp[key]
+						if !tmp.nil?
+							tmp = tmp[key]
+						else
+							tmp = -1
+						end
 					end
 				else
 					tmp = -1
@@ -80,7 +92,11 @@ class GetData
 				tmp = response
 				for key in buyKey
 					key = key.is_i? ? key.to_i : key
-					tmp = tmp[key]
+					if !tmp.nil?
+						tmp = tmp[key]
+					else
+						tmp = -1
+					end
 				end
 				currentEx["buy"] = tmp
 			end
@@ -98,7 +114,11 @@ class GetData
 				tmp = response
 				for key in sellKey
 					key = key.is_i? ? key.to_i : key
-					tmp = tmp[key]
+					if !tmp.nil?
+						tmp = tmp[key]
+					else
+						tmp = -1
+					end
 				end
 				currentEx["sell"] = tmp
 			end
@@ -112,7 +132,11 @@ class GetData
 					tmp = response
 					for key in volumeKey
 						key = key.is_i? ? key.to_i : key
-						tmp = tmp[key]
+						if !tmp.nil?
+							tmp = tmp[key]
+						else
+							tmp = -1
+						end
 					end
 					currentEx["volume"] = tmp
 				end
