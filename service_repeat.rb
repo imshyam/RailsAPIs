@@ -1,8 +1,9 @@
 require './save_db.rb'
 
-i = 0
+i = 1
 while 1
+	puts "\n-----------------------*****" + i.to_s + "*****-----------------------"
+	i += 1
 	SaveDB.new
-	i++
 	sleep(30)
 end

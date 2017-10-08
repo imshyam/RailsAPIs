@@ -180,12 +180,11 @@ class SaveDB
 									ex_data['buy'].to_s + ", " + 
 									ex_data['sell'].to_s +
 									")"
-					puts "====================================================="
 					puts query_history
 					@db.execute query_history
 					puts "*****************************"
 					puts query_current
-					puts "====================================================="
+					puts "======================================================="
 					@db.execute query_current
 				end
 			end
