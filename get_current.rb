@@ -38,6 +38,7 @@ class GetData
 					if !tmp.nil?
 						tmp = tmp[key]
 					else
+						currentEx["success"] = false
 						tmp = -1
 					end
 				end
@@ -48,6 +49,7 @@ class GetData
 					if !tmp.nil?
 						tmp = tmp[key]
 					else
+						currentEx["success"] = false
 						tmp = -1
 					end
 				end
@@ -95,6 +97,7 @@ class GetData
 					if !tmp.nil?
 						tmp = tmp[key]
 					else
+						currentEx["success"] = false
 						tmp = -1
 					end
 				end
@@ -117,6 +120,7 @@ class GetData
 					if !tmp.nil?
 						tmp = tmp[key]
 					else
+						currentEx["success"] = false
 						tmp = -1
 					end
 				end
