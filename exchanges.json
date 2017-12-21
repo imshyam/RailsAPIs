@@ -65,7 +65,7 @@
     "web": "https://www.zebpay.com/",
     "api": {
       "all": {
-        "endpoint": "https://api.zebpay.com/api/v1/ticker?currencyCode=INR",
+        "endpoint": "https://www.zebapi.com/api/v1/market/ticker/btc/inr",
         "buyKey": "buy",
         "sellKey": "sell",
         "volumeKey": "volume"
