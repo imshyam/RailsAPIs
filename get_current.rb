@@ -163,7 +163,6 @@ class GetData
 	end
 	def getCurrent
 		for exchange in @jsonData
-			puts exchange['name'] + " and " + exchange['currency'] + " and " + exchange['crypto_currency']
 			result = getResponse(exchange['api'])
 			currentData = {}
 			currentData["crypto_curr"] = exchange['crypto_currency']
