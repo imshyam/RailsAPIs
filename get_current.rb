@@ -40,6 +40,7 @@ class GetData
 					else
 						currentEx["success"] = false
 						tmp = -1
+						break
 					end
 				end
 				currentEx["buy"] = tmp
@@ -51,6 +52,7 @@ class GetData
 					else
 						currentEx["success"] = false
 						tmp = -1
+						break
 					end
 				end
 				currentEx["sell"] = tmp
@@ -62,6 +64,7 @@ class GetData
 							tmp = tmp[key]
 						else
 							tmp = -1
+							break
 						end
 					end
 				else
@@ -99,6 +102,7 @@ class GetData
 					else
 						currentEx["success"] = false
 						tmp = -1
+						break
 					end
 				end
 				currentEx["buy"] = tmp
@@ -122,6 +126,7 @@ class GetData
 					else
 						currentEx["success"] = false
 						tmp = -1
+						break
 					end
 				end
 				currentEx["sell"] = tmp
@@ -140,6 +145,7 @@ class GetData
 							tmp = tmp[key]
 						else
 							tmp = -1
+							break
 						end
 					end
 					currentEx["volume"] = tmp
@@ -157,6 +163,7 @@ class GetData
 	end
 	def getCurrent
 		for exchange in @jsonData
+			puts exchange['name'] + " and " + exchange['currency'] + " and " + exchange['crypto_currency']
 			result = getResponse(exchange['api'])
 			currentData = {}
 			currentData["crypto_curr"] = exchange['crypto_currency']
