@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907095924) do
+ActiveRecord::Schema.define(version: 20180126173742) do
 
   create_table "currents", force: :cascade do |t|
     t.text "crypto_curr"
@@ -40,12 +40,13 @@ ActiveRecord::Schema.define(version: 20170907095924) do
   end
 
   create_table "histories", force: :cascade do |t|
-    t.text "crypto_curr"
-    t.text "curr"
+    t.string "period"
+    t.string "crypto_curr"
+    t.string "curr"
     t.integer "exchange_id"
-    t.datetime "date_time"
     t.float "buy"
     t.float "sell"
+    t.datetime "date_time"
   end
 
 end
