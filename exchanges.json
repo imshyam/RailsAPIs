@@ -220,24 +220,6 @@
     }
   },
   {
-    "id": 13,
-    "name": "HitBTC",
-    "crypto_currency": "Bitcoin",
-    "currency": "EUR",
-    "buy_fee": "0", 
-    "sell_fee": "0",
-    "app": "",
-    "web": "https://hitbtc.com/",
-    "api": {
-      "all": {
-        "endpoint": "http://api.hitbtc.com/api/1/public/BTCEUR/ticker",
-        "buyKey": "ask",
-        "sellKey": "bid",
-        "volumeKey": "volume"
-      }
-    }
-  },
-  {
     "id": 14,
     "name": "Cex.io",
     "crypto_currency": "Bitcoin",
@@ -306,42 +288,6 @@
         "buyKey": "ask",
         "sellKey": "bid",
         "volumeKey": "volume"
-      }
-    }
-  },
-  {
-    "id": 18,
-    "name": "OKCoin",
-    "crypto_currency": "Bitcoin",
-    "currency": "CNY",
-    "buy_fee": "0", 
-    "sell_fee": "0",
-    "app": "com.okcoin.trader.google",
-    "web": "https://www.okcoin.com/",
-    "api": {
-      "all": {
-        "endpoint": "https://www.okcoin.cn/api/v1/ticker.do?symbol=btc_cny",
-        "buyKey": "ticker.buy",
-        "sellKey": "ticker.sell",
-        "volumeKey": "ticker.vol"
-      }
-    }
-  },
-  {
-    "id": 19,
-    "name": "BTCCHINA",
-    "crypto_currency": "Bitcoin",
-    "currency": "CNY",
-    "buy_fee": "0", 
-    "sell_fee": "0",
-    "app": "com.btcchina.spot",
-    "web": "https://www.btcchina.com/",
-    "api": {
-      "all": {
-        "endpoint": "https://data.btcchina.com/data/ticker?market=btccny",
-        "buyKey": "ticker.buy",
-        "sellKey": "ticker.sell",
-        "volumeKey": "ticker.vol"
       }
     }
   },
