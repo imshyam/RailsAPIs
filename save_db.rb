@@ -40,7 +40,7 @@ class SaveDB
 			insertHistory(period.downcase, crypto_curr, curr, exchange_id,
 														@@data['firstEntryTime' + period], 
 														@@data['sum' + period + 'Buy'] / @@data['count' + period], 
-														@@data['sum' + period + 'Buy'] / @@data['count' + period])
+														@@data['sum' + period + 'Sell'] / @@data['count' + period])
 		end
 	end
 	def insertHistory(period, crypto_curr, curr, exchange_id, date_time, buy, sell)
@@ -243,7 +243,7 @@ class SaveDB
 					insertHistory("day", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
 														@@data['firstEntryTimeDay'], 
 														@@data['sumDayBuy'] / @@data['countDay'], 
-														@@data['sumDayBuy'] / @@data['countDay'])
+														@@data['sumDaySell'] / @@data['countDay'])
 				end
 				# Avg of 1 hour
 				if @@data["firstEntryTimeWeek"].nil? or Time.now.getutc - @@data["firstEntryTimeWeek"] > 3600
@@ -251,8 +251,8 @@ class SaveDB
 					updateTo.delete("Week")
 					insertHistory("week", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
 														@@data['firstEntryTimeWeek'], 
-														@@data['sumDayBuy'] / @@data['countWeek'], 
-														@@data['sumDayBuy'] / @@data['countWeek'])
+														@@data['sumWeekBuy'] / @@data['countWeek'], 
+														@@data['sumWeekSell'] / @@data['countWeek'])
 				end
 				# Avg of 4 hours
 				if @@data["firstEntryTimeMonth"].nil? or Time.now.getutc - @@data["firstEntryTimeMonth"] > 14400
@@ -260,8 +260,8 @@ class SaveDB
 					updateTo.delete("Month")
 					insertHistory("month", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
 														@@data['firstEntryTimeMonth'], 
-														@@data['sumDayBuy'] / @@data['countMonth'], 
-														@@data['sumDayBuy'] / @@data['countMonth'])
+														@@data['sumMonthBuy'] / @@data['countMonth'], 
+														@@data['sumMonthSell'] / @@data['countMonth'])
 				end
 				# Avg of 2 days
 				if @@data["firstEntryTimeAll"].nil? or Time.now.getutc - @@data["firstEntryTimeAll"] > 172800
@@ -269,8 +269,8 @@ class SaveDB
 					updateTo.delete("All")
 					insertHistory("all", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
 														@@data['firstEntryTimeAll'], 
-														@@data['sumDayBuy'] / @@data['countAll'], 
-														@@data['sumDayBuy'] / @@data['countAll'])
+														@@data['sumAllBuy'] / @@data['countAll'], 
+														@@data['sumAllSell'] / @@data['countAll'])
 				end
 
 				# Update remaining
