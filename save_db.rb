@@ -2,6 +2,11 @@ require './get_current.rb'
 require 'sqlite3'
 class SaveDB
 	@db
+	@@dataAll
+	@@data
+	def self.dataAll
+		@@dataAll
+	end
 	def getQuery(curr_data, min_max, buy_sell, time)
 		query_prefix  = "FROM histories where date_time > datetime(\"now\", \""
 		query_suffix = "\") and crypto_curr = \"" +  curr_data['crypto_curr'] + "\" and curr = \"" +
@@ -14,8 +19,32 @@ class SaveDB
 	def compareMaxWithCurr(maxh, curr)
 		return [maxh.nil? ? curr.to_f : maxh, curr.to_f].max
 	end
-	def getQueryHistory(period, crypto_curr, curr, exchange_id, date_time, buy, sell)
-		return "INSERT INTO "+
+	def deleteOlder(period, timeInSecs)
+		delete_query = "DELETE FROM histories WHERE period = " +
+							"\"" + period + "\" and date_time < \"" + (Time.now - timeInSecs).getutc.to_s + "\""
+		puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + period + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		puts delete_query
+		@db.execute delete_query
+	end
+	def reinit(period, buy, sell)
+		@@data["count" + period] = 1
+		@@data["sum" + period + "Buy"] =  buy.to_f
+		@@data["sum" + period + "Sell"] =  sell.to_f
+		@@data["firstEntryTime" + period] = Time.now.getutc
+	end
+	def updateInData(updateTo, buy, sell, crypto_curr, curr, exchange_id)
+		for period in updateTo
+			@@data["count" + period] += 1
+			@@data["sum" + period + "Buy"] +=  buy.to_f
+			@@data["sum" + period + "Sell"] += sell.to_f
+			insertHistory(period.downcase, crypto_curr, curr, exchange_id,
+														@@data['firstEntryTime' + period], 
+														@@data['sum' + period + 'Buy'] / @@data['count' + period], 
+														@@data['sum' + period + 'Buy'] / @@data['count' + period])
+		end
+	end
+	def insertHistory(period, crypto_curr, curr, exchange_id, date_time, buy, sell)
+		query_history =  "REPLACE INTO "+
 								"histories ( period, " + 
 										   "crypto_curr, " +
 										   "curr, " +
@@ -30,6 +59,9 @@ class SaveDB
 								buy.to_s + ", " + 
 								sell.to_s +
 								")"
+		puts "################------------   " + period + "     -------------####################"
+		puts query_history
+		@db.execute query_history
 	end
 	def calculateLastMinMax(curr_data)
 		# Last Hour : MIN MAX : BUY SELL
@@ -92,7 +124,8 @@ class SaveDB
 		return x
 	end
 
-	def initialize
+	def initialize(dataAll)
+		@@dataAll = Hash[]
 		@db = SQLite3::Database.open "db/development.sqlite3"
 		@db.execute "CREATE TABLE IF NOT EXISTS currents(
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -120,11 +153,13 @@ class SaveDB
 	        		last_week_max_sell DOUBLE,
 	        		last_month_max_sell DOUBLE
 	        		)"
-	    # Make Unique index
+	    # Make Unique index for currents Update or Insert Entry
 	    @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS " +
 	    			"crypto_curr_id " +
 	    			"ON " +
 	    			"currents (crypto_curr, curr, exchange_id);"
+
+
 	    @db.execute "CREATE TABLE IF NOT EXISTS histories(
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
 	        		period TEXT,
@@ -135,8 +170,18 @@ class SaveDB
 	        		buy DOUBLE,
 	        		sell DOUBLE
 	        		)"
-	    data = GetData.new.getResult
-	    for ex_data in data
+	    # Make Unique index for histories to update when time and period are same
+	    @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS " +
+	    			"period_time_id " +
+	    			"ON " +
+	    			"histories (period, date_time, exchange_id);"
+	    res = GetData.new.getResult
+	    for ex_data in res
+	    	if dataAll[ex_data['exchange_id']].nil?
+	    		@@data = Hash[]
+	    	else
+	    		@@data = dataAll[ex_data['exchange_id']]
+	    	end
 	    	if ex_data['success']
 	    		buy_sell = @db.execute "SELECT buy, sell FROM currents " +
 	    			  "WHERE crypto_curr = \"" + ex_data['crypto_curr'] + "\" " +
@@ -173,26 +218,70 @@ class SaveDB
 								last_min_max['last_month_max_buy'].to_s + ", " +
 								last_min_max['last_month_max_sell'].to_s +
 								")"
-				query_history_hour = getQueryHistory("hour", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
-														Time.now.getutc, ex_data['buy'], ex_data['sell'])
-				countDay = 0
-				sumDay = 0
-				firstEntryTimeDay = ""
-				countWeek = 0
-				sumWeek = 0
-				firstEntryTimeDay = ""
-				countMonth = 0
-				sumMonth = 0
-				firstEntryTimeDay = ""
-				countAll = 0
-				sumAll = 0
-				firstEntryTimeAll = ""
-				puts query_history
-				@db.execute query_history
-				puts "*****************************"
+
 				puts query_current
-				puts "======================================================="
+				puts "=======================***********************================================"
 				@db.execute query_current
+
+				# Handle History
+
+				# Update these values in @@data
+				updateTo = ["Day", "Week", "Month", "All"]
+
+				# Delete older details
+				deleteOlder("hour", 3600)
+				deleteOlder("day", 86400)
+				deleteOlder("week", 604800)
+				deleteOlder("month", 2592000)
+
+				# Reinitialize data after some period
+				# Avg of 8 mins
+				if @@data["firstEntryTimeDay"].nil? or Time.now.getutc - @@data["firstEntryTimeDay"] > 480
+					reinit("Day", ex_data["buy"], ex_data["sell"])
+					updateTo.delete("Day")
+					puts @@data['sumDayBuy'].class
+					insertHistory("day", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
+														@@data['firstEntryTimeDay'], 
+														@@data['sumDayBuy'] / @@data['countDay'], 
+														@@data['sumDayBuy'] / @@data['countDay'])
+				end
+				# Avg of 1 hour
+				if @@data["firstEntryTimeWeek"].nil? or Time.now.getutc - @@data["firstEntryTimeWeek"] > 3600
+					reinit("Week", ex_data["buy"], ex_data["sell"])
+					updateTo.delete("Week")
+					insertHistory("week", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
+														@@data['firstEntryTimeWeek'], 
+														@@data['sumDayBuy'] / @@data['countWeek'], 
+														@@data['sumDayBuy'] / @@data['countWeek'])
+				end
+				# Avg of 4 hours
+				if @@data["firstEntryTimeMonth"].nil? or Time.now.getutc - @@data["firstEntryTimeMonth"] > 14400
+					reinit("Month", ex_data["buy"], ex_data["sell"])
+					updateTo.delete("Month")
+					insertHistory("month", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
+														@@data['firstEntryTimeMonth'], 
+														@@data['sumDayBuy'] / @@data['countMonth'], 
+														@@data['sumDayBuy'] / @@data['countMonth'])
+				end
+				# Avg of 2 days
+				if @@data["firstEntryTimeAll"].nil? or Time.now.getutc - @@data["firstEntryTimeAll"] > 172800
+					reinit("All", ex_data["buy"], ex_data["sell"])
+					updateTo.delete("All")
+					insertHistory("all", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
+														@@data['firstEntryTimeAll'], 
+														@@data['sumDayBuy'] / @@data['countAll'], 
+														@@data['sumDayBuy'] / @@data['countAll'])
+				end
+
+				# Update remaining
+				updateInData(updateTo, ex_data["buy"], ex_data["sell"], ex_data['crypto_curr'], 
+													   ex_data['curr'], ex_data['exchange_id'])
+
+				# Insert Hour
+				insertHistory("hour", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
+														Time.now.getutc, ex_data['buy'], ex_data['sell'])
+
+	    		@@dataAll[ex_data['exchange_id']] = @@data
 			end
 		end
 	rescue SQLite3::Exception => e
