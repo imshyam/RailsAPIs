@@ -37,16 +37,10 @@ module Api
       end
       def history
         ids = params[:ids]
-        days = params[:days]
-        hours = params[:hours]
+        period = params[:period]
         idList = ids.split(',')
-        if !days.nil?
-          days = days.to_i
-          dataList = History.where(exchange_id: idList).where("date_time >= ?", days.days.ago.utc)
-        end
-        if !hours.nil?
-          hours = hours.to_i
-          dataList = History.where(exchange_id: idList).where("date_time >= ?", hours.hours.ago.utc)
+        if !period.nil?
+          dataList = History.where(exchange_id: idList).where("period = ?", period)
         end
         @completeData = []
         for data in dataList
