@@ -14,6 +14,23 @@ class SaveDB
 	def compareMaxWithCurr(maxh, curr)
 		return [maxh.nil? ? curr.to_f : maxh, curr.to_f].max
 	end
+	def getQueryHistory(period, crypto_curr, curr, exchange_id, date_time, buy, sell)
+		return "INSERT INTO "+
+								"histories ( period, " + 
+										   "crypto_curr, " +
+										   "curr, " +
+										   "exchange_id, " +
+										   "date_time, " +
+										   "buy, " +
+										   "sell) VALUES ( \"" + period + "\", " +
+								"\"" + crypto_curr + "\", " +
+								"\"" + curr + "\", " +
+								exchange_id.to_s + ", " +
+								"\"" + date_time.to_s + "\", " +
+								buy.to_s + ", " + 
+								sell.to_s +
+								")"
+	end
 	def calculateLastMinMax(curr_data)
 		# Last Hour : MIN MAX : BUY SELL
 		query_last_hour_max_buy = getQuery(curr_data, "MAX", "buy", "-1 hours")
@@ -110,6 +127,7 @@ class SaveDB
 	    			"currents (crypto_curr, curr, exchange_id);"
 	    @db.execute "CREATE TABLE IF NOT EXISTS histories(
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
+	        		period TEXT,
 	        		crypto_curr TEXT,
 	        		curr TEXT,
 	        		exchange_id INTEGER,
@@ -120,73 +138,61 @@ class SaveDB
 	    data = GetData.new.getResult
 	    for ex_data in data
 	    	if ex_data['success']
-	    		need_update = true
 	    		buy_sell = @db.execute "SELECT buy, sell FROM currents " +
 	    			  "WHERE crypto_curr = \"" + ex_data['crypto_curr'] + "\" " +
 	    			  "AND curr = \"" + ex_data['curr'] + "\" " +
 	    			  "AND exchange_id = " + ex_data['exchange_id'].to_s
-	    		if !buy_sell[0].nil?
-		    		buy = buy_sell[0][0]
-		    		sell = buy_sell[0][1]
-		    		buy_last = ex_data['buy'].to_f
-		    		sell_last = ex_data['sell'].to_f
-		    		if buy == buy_last && sell == sell_last
-		    			need_update = false
-		    		end
-		    	end
-	    		if need_update
-			    	last_min_max = calculateLastMinMax(ex_data)
-			   	    query_current = "REPLACE INTO currents " +
-			   	    				"(crypto_curr, curr, exchange_id, date_time, " +
-			   	    				  "buy, sell, volume, last_hour_min_buy, last_hour_min_sell, last_day_min_buy, last_day_min_sell, last_week_min_buy, last_week_min_sell, " +
-			   	    				  "last_month_min_buy, last_month_min_sell, last_hour_max_buy, last_hour_max_sell, last_day_max_buy, last_day_max_sell, "+
-			   	    				  "last_week_max_buy, last_week_max_sell, last_month_max_buy, last_month_max_sell) " +
-			   	    				"VALUES ("+
-									"\"" + ex_data['crypto_curr'] + "\", " +
-									"\"" + ex_data['curr'] + "\", " +
-									ex_data['exchange_id'].to_s + ", " +
-									"\"" + Time.now.getutc.to_s + "\", " +
-									ex_data['buy'].to_s + ", " + 
-									ex_data['sell'].to_s + ", " + 
-									ex_data['volume'].to_s + ", " + 
-									last_min_max['last_hour_min_buy'].to_s + ", " +
-									last_min_max['last_hour_min_sell'].to_s + ", " +
-									last_min_max['last_day_min_buy'].to_s + ", " +
-									last_min_max['last_day_min_sell'].to_s + ", " +
-									last_min_max['last_week_min_buy'].to_s + ", " +
-									last_min_max['last_week_min_sell'].to_s + ", " +
-									last_min_max['last_month_min_buy'].to_s + ", " +
-									last_min_max['last_month_min_sell'].to_s + ", " +
-									last_min_max['last_hour_max_buy'].to_s + ", " +
-									last_min_max['last_hour_max_sell'].to_s + ", " +
-									last_min_max['last_day_max_buy'].to_s + ", " +
-									last_min_max['last_day_max_sell'].to_s + ", " +
-									last_min_max['last_week_max_buy'].to_s + ", " +
-									last_min_max['last_week_max_sell'].to_s + ", " +
-									last_min_max['last_month_max_buy'].to_s + ", " +
-									last_min_max['last_month_max_sell'].to_s +
-									")"
-					query_history = "INSERT INTO "+
-									"histories (crypto_curr, " +
-											   "curr, " +
-											   "exchange_id, " +
-											   "date_time, " +
-											   "buy, " +
-											   "sell) VALUES (" +
-									"\"" + ex_data['crypto_curr'] + "\", " +
-									"\"" + ex_data['curr'] + "\", " +
-									ex_data['exchange_id'].to_s + ", " +
-									"\"" + Time.now.getutc.to_s + "\", " +
-									ex_data['buy'].to_s + ", " + 
-									ex_data['sell'].to_s +
-									")"
-					puts query_history
-					@db.execute query_history
-					puts "*****************************"
-					puts query_current
-					puts "======================================================="
-					@db.execute query_current
-				end
+		    	last_min_max = calculateLastMinMax(ex_data)
+		   	    query_current = "REPLACE INTO currents " +
+		   	    				"(crypto_curr, curr, exchange_id, date_time, " +
+		   	    				  "buy, sell, volume, last_hour_min_buy, last_hour_min_sell, last_day_min_buy, last_day_min_sell, last_week_min_buy, last_week_min_sell, " +
+		   	    				  "last_month_min_buy, last_month_min_sell, last_hour_max_buy, last_hour_max_sell, last_day_max_buy, last_day_max_sell, "+
+		   	    				  "last_week_max_buy, last_week_max_sell, last_month_max_buy, last_month_max_sell) " +
+		   	    				"VALUES ("+
+								"\"" + ex_data['crypto_curr'] + "\", " +
+								"\"" + ex_data['curr'] + "\", " +
+								ex_data['exchange_id'].to_s + ", " +
+								"\"" + Time.now.getutc.to_s + "\", " +
+								ex_data['buy'].to_s + ", " + 
+								ex_data['sell'].to_s + ", " + 
+								ex_data['volume'].to_s + ", " + 
+								last_min_max['last_hour_min_buy'].to_s + ", " +
+								last_min_max['last_hour_min_sell'].to_s + ", " +
+								last_min_max['last_day_min_buy'].to_s + ", " +
+								last_min_max['last_day_min_sell'].to_s + ", " +
+								last_min_max['last_week_min_buy'].to_s + ", " +
+								last_min_max['last_week_min_sell'].to_s + ", " +
+								last_min_max['last_month_min_buy'].to_s + ", " +
+								last_min_max['last_month_min_sell'].to_s + ", " +
+								last_min_max['last_hour_max_buy'].to_s + ", " +
+								last_min_max['last_hour_max_sell'].to_s + ", " +
+								last_min_max['last_day_max_buy'].to_s + ", " +
+								last_min_max['last_day_max_sell'].to_s + ", " +
+								last_min_max['last_week_max_buy'].to_s + ", " +
+								last_min_max['last_week_max_sell'].to_s + ", " +
+								last_min_max['last_month_max_buy'].to_s + ", " +
+								last_min_max['last_month_max_sell'].to_s +
+								")"
+				query_history_hour = getQueryHistory("hour", ex_data['crypto_curr'], ex_data['curr'], ex_data['exchange_id'],
+														Time.now.getutc, ex_data['buy'], ex_data['sell'])
+				countDay = 0
+				sumDay = 0
+				firstEntryTimeDay = ""
+				countWeek = 0
+				sumWeek = 0
+				firstEntryTimeDay = ""
+				countMonth = 0
+				sumMonth = 0
+				firstEntryTimeDay = ""
+				countAll = 0
+				sumAll = 0
+				firstEntryTimeAll = ""
+				puts query_history
+				@db.execute query_history
+				puts "*****************************"
+				puts query_current
+				puts "======================================================="
+				@db.execute query_current
 			end
 		end
 	rescue SQLite3::Exception => e
