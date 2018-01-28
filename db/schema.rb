@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 20180126173742) do
     t.float "buy"
     t.float "sell"
     t.datetime "date_time"
+    t.index ["period", "date_time", "exchange_id"], name: "period_time_id", unique: true
   end
 
 end
