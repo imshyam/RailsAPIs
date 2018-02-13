@@ -36,22 +36,41 @@ module Api
         render json: @completeData
       end
       def history
+        @completeData = []
+        @currentData = []
+        @historyData = []
         ids = params[:ids]
         period = params[:period]
         idList = ids.split(',')
-        if !period.nil?
-          dataList = History.where(exchange_id: idList).where("period = ?", period)
-        end
-        @completeData = []
+
+        # Handle Current Data
+        dataList = Current.where(exchange_id: idList)
         for data in dataList
           dataJson = Hash["crypto_curr" => data.crypto_curr,
                     "curr" => data.curr,
                     "exchange_id" => data.exchange_id,
                     "date_time" => data.date_time,
                     "buy" => data.buy,
-                    "sell" => data.sell]
-          @completeData.push(dataJson)
+                    "sell" => data.sell,
+                    "volume" => data.volume]
+          @currentData.push(dataJson)
         end
+
+        # Handle History
+        if !period.nil?
+          dataList = History.where(exchange_id: idList).where("period = ?", period)
+        end
+        for data in dataList
+          dataJson = Hash[
+                    "exchange_id" => data.exchange_id,
+                    "date_time" => data.date_time,
+                    "buy" => data.buy,
+                    "sell" => data.sell]
+          @historyData.push(dataJson)
+        end
+        @completeData = Hash[
+                    "current" => @currentData,
+                    "history" => @historyData]
         render json: @completeData
       end
     end
