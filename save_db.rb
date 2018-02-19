@@ -175,7 +175,22 @@ class SaveDB
 	    			"period_time_id " +
 	    			"ON " +
 	    			"histories (period, date_time, exchange_id);"
-	    res = GetData.new.getResult
+	    begin
+	    	res = GetData.new.getResult
+	    rescue StandardError => e# if error occured
+	    	puts "*\n*\n*\n*\n*****************************\nError HERE: "
+	    	puts e
+	    	puts "\n*****************************\n*\n*\n"
+	    	# Try again
+	    	begin
+	    		res = GetData.new.getResult
+	    	rescue  StandardError => e
+	    		# Again error, just show the error
+		    	puts "*\n*\n*\n*\n*****************************\nError Again: "
+		    	puts e
+		    	puts "\n*****************************\n*\n*\n"
+		    end
+	    end
 	    for ex_data in res
 	    	if dataAll[ex_data['exchange_id']].nil?
 	    		@@data = Hash[]
